@@ -41,6 +41,8 @@ array_push($main_menu['links'],$item);
 
 function print_main_menu($menu_html = NULL){
 //    $dropdown_menu = print_vocabulary_to_html(3);
+//    $menu_html = '<li class="dropdown"><a role="button" data-toggle="dropdown" class="btn btn-primary">Dịch vụ</a><ul class="dropdown-menu multi-level">' . print_vocabulary_to_html(3) . '</ul></li>';
+//    echo $menu_html;exit;
     $menu_html .= '<ul class="nav nav-pills">';
     $menu_html .= '<li>' . l('Home', '<front>') . '</li>';
     $menu_html .= '<li>' . l('Giới thiệu', 'node/1') . '</li>';
@@ -59,11 +61,10 @@ function print_vocabulary_to_html($vid){
     foreach($terms as $term){
         if(isset($term->parents[0]) && $term->parents[0] == 0 /*&& $term->tid != 1*/){
             $html .= '<li>';
-            $html .= print_term_to_html($term->tid);
+            $html .= print_term_to_html2($term->tid);
             $html .= '</li>';
         }
     }
-//    echo $html;exit;
     return $html;
 }
 
@@ -105,6 +106,31 @@ function print_term_to_html($tid, $html = NULL, $is_first_item = true, $is_child
         }
     }
 
+    return $html;
+}
+
+function print_term_to_html2($tid, $html = NULL, $is_first_item = true, $is_child_item = false){
+    $result = db_query("SELECT th.tid FROM taxonomy_term_hierarchy th WHERE th.parent = '". $tid . "'");
+
+    /* get term name */
+    $term = taxonomy_term_load($tid);
+    $name = $term->name;
+//    echo '<pre>';var_dump($result->fetchAll());exit;
+
+    if($result->rowCount() > 0){
+            $html .= '<li class="dropdown-submenu"><a>' . $name . '</a><ul class="dropdown-menu">';
+
+            $inner_html = '';
+            $record = $result->fetchAll();
+            foreach ($record as $row) {
+                $html .= print_term_to_html2($row->tid, $inner_html,false,true);
+            }
+            $html .= '</ul></li>';
+
+    }else{
+        $html .= '<li>' . l($name, 'taxonomy/term/' . $tid) . '</li>';
+    }
+//    echo $html;exit;
     return $html;
 }
 ?>
