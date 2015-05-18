@@ -74,19 +74,92 @@
  */
 ?>
 <?php
+include_once '/dropdown-menu.inc.php';
 ?>
-<div class="bootstrap-wrapper">
-    <header id="navbar" class="container">
-        <img src="<?php echo $logo; ?>"/>
-        <?php print render($page['header']); ?>
+
+<div class="bootstrap-wrapper header">
+    <header id="navbar" role="banner" class="container">
+        <div class="container">
+            <div class="col-md-4">
+                <?php if ($logo): ?>
+                    <a class="logo navbar-btn pull-left" href="<?php print $front_page; ?>"
+                       title="<?php print t('Home'); ?>">
+                        <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>"/>
+                    </a>
+                <?php endif; ?>
+
+                <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            <div class="col-md-8">
+                <?php print_main_menu(); ?>
+            </div>
+        </div>
     </header>
 </div>
 
 <div class="main-container container">
-    <?php print render($page['banner']); ?>
-</div>
 
-<div class="bootstrap-wrapper">
+    <header role="banner" id="page-header">
+        <?php if (!empty($site_slogan)): ?>
+            <p class="lead"><?php print $site_slogan; ?></p>
+        <?php endif; ?>
+
+        <?php print render($page['header']); ?>
+
+        <?php
+        print theme('links__system_main_menu', array('links' => $main_menu, 'attributes' => array('id' => 'main-menu', 'class' => array('links', 'inline', 'clearfix')), 'heading' => t('Main menu')));
+        ?>
+    </header>
+    <!-- /#page-header -->
+
+    <div class="row">
+
+        <?php if (!empty($page['sidebar_first'])): ?>
+            <aside class="col-sm-3" role="complementary">
+                <?php print render($page['sidebar_first']); ?>
+            </aside>  <!-- /#sidebar-first -->
+        <?php endif; ?>
+
+        <section<?php print $content_column_class; ?>>
+            <?php if (!empty($page['highlighted'])): ?>
+                <div class="highlighted jumbotron"><?php print render($page['highlighted']); ?></div>
+            <?php endif; ?>
+            <?php if (!empty($breadcrumb)): print $breadcrumb; endif; ?>
+            <a id="main-content"></a>
+            <?php print render($title_prefix); ?>
+            <?php if (!empty($title)): ?>
+                <h1 class="page-header"><?php print $title; ?></h1>
+            <?php endif; ?>
+            <?php print render($title_suffix); ?>
+            <?php print $messages; ?>
+            <?php if (!empty($tabs)): ?>
+                <?php print render($tabs); ?>
+            <?php endif; ?>
+            <?php if (!empty($page['help'])): ?>
+                <?php print render($page['help']); ?>
+            <?php endif; ?>
+            <?php if (!empty($action_links)): ?>
+                <ul class="action-links"><?php print render($action_links); ?></ul>
+            <?php endif; ?>
+            <?php print render($page['content']); ?>
+        </section>
+
+        <?php if (!empty($page['sidebar_second'])): ?>
+            <aside class="col-sm-3" role="complementary">
+                <?php print render($page['sidebar_second']); ?>
+            </aside>  <!-- /#sidebar-second -->
+        <?php endif; ?>
+
+    </div>
+</div>
+<div class="bootstrap-wrapper footer">
     <footer class="footer container">
         <?php print render($page['footer']); ?>
     </footer>

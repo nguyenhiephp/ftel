@@ -7,8 +7,9 @@ core = 7.x
 ;; Regions
 ;;;;;;;;;;;;;;;;;;;;;
 
+regions[header]         = 'Header'
 regions[navigation]     = 'Navigation'
-regions[header]         = 'Top Bar'
+regions[top_bar]         = 'Top Bar'
 regions[highlighted]    = 'Highlighted'
 regions[help]           = 'Help'
 regions[content]        = 'Content'
@@ -132,7 +133,7 @@ exclude[css][] = 'modules/user/user.css'
 ;exclude[css][] = 'modules/system/system.css'
 ;exclude[css][] = 'modules/system/system.admin.css'
 ;exclude[css][] = 'modules/system/system.base.css'
-
+exclude[css][] = 'themes/bootstrap/css/layout.css'
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; SimplyTest.me

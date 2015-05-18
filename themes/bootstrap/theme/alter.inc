@@ -47,6 +47,19 @@ function bootstrap_css_alter(&$css)
             'browsers' => array('IE' => TRUE, '!IE' => TRUE),
             'weight' => -1,
         );
+
+        // Add layout css
+        $layout = $theme_path . '/css/layout.css';
+        $css[$layout] = array(
+            'data' => $layout,
+            'type' => 'file',
+            'every_page' => TRUE,
+            'media' => 'all',
+            'preprocess' => TRUE,
+            'group' => CSS_THEME,
+            'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+            'weight' => 0,
+        );
     }
     if (!empty($excludes)) {
         $css = array_diff_key($css, drupal_map_assoc($excludes));

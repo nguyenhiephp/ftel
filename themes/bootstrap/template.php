@@ -54,3 +54,75 @@ function bootstrap_theme(&$existing, $type, $theme, $path) {
  * they are properly detected when drupal_alter() is invoked.
  */
 bootstrap_include('bootstrap', 'theme/alter.inc');
+
+function bootstrap_links__system_main_menu($variables) {
+    $html = "<div class=\"dropdown\">\n";
+    $html .= "  <ul>\n";
+    foreach ($variables['links']["links"] as $link) {
+        if(!isset($variables['links']["links"]["term"])){
+            $html .= "<li>".l($link['title'], $link['path'], array('attributes' => array('title' => 'refresh'))) ."</li>";
+        }else{
+
+        }
+    }
+    $html .= "</ul>\n";
+    $html .= "</div>\n";
+
+    return $html;
+}
+
+function print_vocabulary_to_html($vid){
+    $terms = taxonomy_get_tree($vid);
+
+    $html = '';
+    foreach($terms as $term){
+        if(isset($term->parents[0]) && $term->parents[0] == 0 /*&& $term->tid != 1*/){
+            $html .= '<li>';
+            $html .= print_term_to_html($term->tid);
+            $html .= '</li>';
+        }
+    }
+    return $html;
+}
+
+function print_term_to_html($tid, $html = NULL, $is_first_item = true, $is_child_item = false){
+    $result = db_query("SELECT th.tid FROM taxonomy_term_hierarchy th WHERE th.parent = '". $tid . "'");
+
+    /* get term name */
+    $term = taxonomy_term_load($tid);
+    $name = $term->name;
+
+//    $name = "Dịch vụ";
+
+    if($result->rowCount() > 0){
+        if(!$is_first_item){
+            $html .= '<ul class="dropdown-submenu"><a>' . $name . '</a>';
+
+            $inner_html = '';
+            $record = $result->fetchAll();
+            foreach ($record as $row) {
+                $html .= print_term_to_html($row->tid, $inner_html,false,true);
+            }
+
+            $html .= '</ul>';
+        }else{
+            $html .= '<a>' . $name . '</a>';
+
+            $inner_html = '';
+            $record = $result->fetchAll();
+            foreach ($record as $row) {
+                $html .= print_term_to_html($row->tid, $inner_html,false,true);
+            }
+            $html .= '';
+        }
+    }else{
+//        echo 'xxx';
+        if($is_child_item){
+            $html .= '<li>' . l($name, 'taxonomy/term/' . $tid) . '</li>';
+        }else{
+            $html .= l($name, 'taxonomy/term/' . $tid);
+        }
+    }
+
+    return $html;
+}
