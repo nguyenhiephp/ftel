@@ -21,7 +21,7 @@ ul.secondary-menu {
   padding: 0;
 }
 
-
+/* Dropdown menu */
 .dropdown-submenu {
     position: relative;
 }
@@ -69,3 +69,6 @@ ul.secondary-menu {
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+
+/* Home page */
+
